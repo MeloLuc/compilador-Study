@@ -17,7 +17,7 @@ class AnalisadorLexico:
     
     def analisar(self):
         # Loop principal que gera todos os tokens
-        print("Iniciando análise léxica...")
+        print("\nIniciando análise léxica...\n")
         
         while self._caractere_atual() is not None:
             char = self._caractere_atual()
@@ -104,9 +104,13 @@ class AnalisadorLexico:
                 continue
         
             if char == '<':
-                # (Exercício para os alunos completarem a lógica do '<=')
-                self._avancar()
-                self.tokens.append(Token(TipoToken.MENOR, "<"))
+                if self.posicao + 1 < len(self.codigo) and self.codigo[self.posicao + 1] == '=':
+                    self._avancar()
+                    self._avancar()
+                    self.tokens.append(Token(TipoToken.MENOR_IGUAL, "<="))
+                else:
+                    self._avancar()
+                    self.tokens.append(Token(TipoToken.MENOR, "<"))
                 continue
         
             if char == '+':
@@ -135,7 +139,7 @@ class AnalisadorLexico:
                 continue
         
             # Se nenhum token foi reconhecido, é um caractere inválido
-            raise ValueError(f"Caractere inválido encontrado: '{char}'")
+            raise ValueError(f"Caractere inválido encontrado: '{char}'") #impleementar erro por linha
         
         # Adiciona um token EOF (End of File) para sinalizar o fim
         self.tokens.append(Token(TipoToken.EOF))
